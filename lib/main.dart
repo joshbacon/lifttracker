@@ -13,13 +13,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: const HomePage(),
       theme: ThemeData(
-        colorScheme: ColorScheme(
+        colorScheme: const ColorScheme(
           brightness: Brightness.dark,
-          surface: Colors.grey[900] ?? Colors.grey,
+          surface: Color.fromARGB(255, 33, 33, 33),
+          surfaceDim: Color.fromARGB(255, 17, 17, 17),
           onSurface: Colors.grey,
-          primary: const Color.fromARGB(255, 159, 25, 215),
+          primary: Color.fromARGB(255, 159, 25, 215),
           onPrimary: Colors.black,
-          secondary: Colors.purple[600] ?? Colors.purple,
+          secondary: Color.fromARGB(255, 142, 36, 170),
           onSecondary: Colors.black,
           error: Colors.deepOrange,
           onError: Colors.black,
@@ -28,9 +29,21 @@ class MyApp extends StatelessWidget {
         fontFamily: "dubai",
         textTheme: const TextTheme(
           titleMedium: TextStyle(
-            color: Colors.white,
+            color: Color.fromARGB(255, 216, 216, 216),
             fontSize: 18,
             fontWeight: FontWeight.bold,
+            height: 1,
+          ),
+          titleLarge: TextStyle(
+            color: Color.fromARGB(255, 216, 216, 216),
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            height: 1,
+          ),
+          bodyLarge: TextStyle(
+            color: Color.fromARGB(255, 216, 216, 216),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
             height: 1,
           ),
         ),

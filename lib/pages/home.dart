@@ -1,7 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lifttracker/components/musclecard.dart';
+import 'package:lifttracker/components/groupcard.dart';
+import 'package:lifttracker/models/groupdata.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,19 +13,19 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  List<MuscleCard> muscleCards = [
-    const MuscleCard(title: 'Chest'),
-    const MuscleCard(title: 'Shoulders'),
-    const MuscleCard(title: 'Back'),
-    const MuscleCard(title: 'Arms'),
-    const MuscleCard(title: 'Core'),
-    const MuscleCard(title: 'Legs'),
+  List<GroupData> groups = [
+    GroupData(0, 'Chest'),
+    GroupData(1, 'Shoulders'),
+    GroupData(2, 'Back'),
+    GroupData(3, 'Arms'),
+    GroupData(4, 'Core'),
+    GroupData(5, 'Legs'),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: Theme.of(context).colorScheme.surfaceDim,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -44,7 +45,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(12.0),
               crossAxisCount: 2,
               dragStartBehavior: DragStartBehavior.down,
-              children: muscleCards,
+              children: groups.map((group) => GroupCard(data: group)).toList(),
             ),
           ),
         ],
