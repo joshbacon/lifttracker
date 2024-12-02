@@ -9,6 +9,13 @@ class ExerciseData {
     _reps = reps;
   }
 
+  ExerciseData.newEntry(int group) {
+    _group = group;
+    _title = "";
+    _weight = 0.0;
+    _reps = 0;
+  }
+
   late int _group;
   late String _title;
   late double _weight;

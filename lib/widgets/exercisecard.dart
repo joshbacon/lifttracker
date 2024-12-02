@@ -20,7 +20,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
       child: Card(
         color: Theme.of(context).colorScheme.surfaceDim,
         shadowColor: Theme.of(context).colorScheme.primary,
-        elevation: 3.0,
+        elevation: 5.0,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,

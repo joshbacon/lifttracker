@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:lifttracker/models/grouplist.dart';
 import 'package:lifttracker/pages/home.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final GroupList list = GroupList();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const HomePage(),
+      home: HomePage(groupList: list),
       theme: ThemeData(
         colorScheme: const ColorScheme(
           brightness: Brightness.dark,
@@ -45,6 +48,11 @@ class MyApp extends StatelessWidget {
             fontSize: 16,
             fontWeight: FontWeight.w600,
             height: 1,
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all<Color>(const Color.fromARGB(255, 17, 17, 17)),
           ),
         ),
       ),
