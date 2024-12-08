@@ -28,17 +28,27 @@ class GroupData {
     _title = newTitle;
   }
 
-  void addExercise(ExerciseData newExercise) {
+  List<ExerciseData> addExercise(ExerciseData newExercise) {
     _exercises.add(newExercise);
+    return _exercises;
   }
 
-  void removeExercise(int index) {
+  List<ExerciseData> updateExercise(ExerciseData newExercise) {
+    // _exercises.add(newExercise);
+    //TODO: make this function
+    return _exercises;
+  }
+
+  List<ExerciseData> removeExercise(int index) {
     _exercises.removeAt(index);
+    return _exercises;
   }
 
   @override
   String toString() {
-    return jsonEncode({"_id": _id, "_title": _title, "_exercises": jsonEncode(_exercises)});
+    String exies = "[${_exercises.map((e) => e.toString()).join(",")}]";
+    final data = {"_id": _id, "_title": _title, "_exercises": exies};
+    return jsonEncode(data);
   }
 
 }

@@ -1,5 +1,7 @@
 
 
+import 'dart:convert';
+
 class ExerciseData {
 
   ExerciseData(int group, String title, double weight, int reps) {
@@ -36,6 +38,11 @@ class ExerciseData {
 
   void updateReps(int newReps) {
     _reps = newReps;
+  }
+
+  @override
+  String toString() {
+    return jsonEncode({"group": _group, "title": _title, "weight": _weight, "reps": _reps});
   }
 
 }

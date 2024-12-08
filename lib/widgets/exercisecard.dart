@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lifttracker/models/exercisedata.dart';
+import 'package:lifttracker/widgets/entrymodal.dart';
 
 class ExerciseCard extends StatefulWidget {
-  const ExerciseCard({super.key, required this.data});
+  const ExerciseCard({super.key, required this.data, required this.hoistRefresh});
 
   final ExerciseData data;
+  final Function hoistRefresh;
 
   @override
   State<ExerciseCard> createState() => _ExerciseCardState();
@@ -14,8 +16,12 @@ class _ExerciseCardState extends State<ExerciseCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // bring up the same modal as the add card but prefill the existing data in
+      onTap: () async {
+        ExerciseData? newExercise = await showDialog<ExerciseData>(
+          context: context,
+          builder: (context) => EntryModal(data: widget.data)
+        );
+        widget.hoistRefresh(newExercise);
       },
       child: Card(
         color: Theme.of(context).colorScheme.surfaceDim,

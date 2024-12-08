@@ -59,7 +59,7 @@ class _EntryModalState extends State<EntryModal> {
                   ),
                   const SizedBox(height: 30.0),
                   Text(
-                    "Weight",
+                    "Weight (lbs)",
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   TextFormField(
