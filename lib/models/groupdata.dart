@@ -13,7 +13,10 @@ class GroupData {
     dynamic data = jsonDecode(json);
     _id = data["_id"];
     _title = data["_title"];
-    _exercises = data["_exercises"];
+    final sdkj = jsonDecode(data["_exercises"]);
+    final sdugio = sdkj.map((exer) => ExerciseData(exer["group"], exer["title"], exer["weight"], exer["reps"]));
+    final stohsnf = sdugio.toList();
+    _exercises = [...stohsnf];
   }
 
   late int _id;
@@ -33,9 +36,9 @@ class GroupData {
     return _exercises;
   }
 
-  List<ExerciseData> updateExercise(ExerciseData newExercise) {
-    // _exercises.add(newExercise);
-    //TODO: make this function
+  List<ExerciseData> updateExercise(int index, ExerciseData newExercise) {
+    _exercises.removeAt(index);
+    _exercises.insert(index, newExercise);
     return _exercises;
   }
 

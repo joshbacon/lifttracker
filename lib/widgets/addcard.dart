@@ -22,7 +22,7 @@ class _AddCardState extends State<AddCard> {
           context: context,
           builder: (context) => EntryModal(data: ExerciseData.newEntry(widget.groupData.id))
         );
-        widget.hoistRefresh(newExercise);
+        widget.hoistRefresh(-1, newExercise);
       },
       child: Card(
         color: Theme.of(context).colorScheme.surfaceDim,

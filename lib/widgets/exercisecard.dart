@@ -3,8 +3,9 @@ import 'package:lifttracker/models/exercisedata.dart';
 import 'package:lifttracker/widgets/entrymodal.dart';
 
 class ExerciseCard extends StatefulWidget {
-  const ExerciseCard({super.key, required this.data, required this.hoistRefresh});
+  const ExerciseCard({super.key, required this.index, required this.data, required this.hoistRefresh});
 
+  final int index;
   final ExerciseData data;
   final Function hoistRefresh;
 
@@ -21,7 +22,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
           context: context,
           builder: (context) => EntryModal(data: widget.data)
         );
-        widget.hoistRefresh(newExercise);
+        widget.hoistRefresh(widget.index, newExercise);
       },
       child: Card(
         color: Theme.of(context).colorScheme.surfaceDim,

@@ -24,17 +24,20 @@ class _GroupPageState extends State<GroupPage> {
       return ExerciseData(e.group, "Total", e.weight + v.weight, 1);
     }) : ExerciseData(widget.data.id, "Total", 0, 1);
 
-    void updateExercise(ExerciseData? newData) async {
+    void updateExercise(int index, ExerciseData? newData) async {
       if (newData != null) {
+        setState(() {
+          if (index >= 0) {
+            widget.data.updateExercise(index, newData);
+          } else {
+            widget.data.addExercise(newData);
+          }
+        });
         try {
           final prefs = await SharedPreferences.getInstance();
-          prefs.setString(newData.group.toString(), newData.toString());
-        } finally {
-          //TODO: know when t call each of these
-          //widget.data.addExercise(newData);
-          //widget.data.updateExercise(newData);
-          setState(() {});
-        }
+          prefs.setString(widget.data.id.toString(), widget.data.toString());
+        // ignore: empty_catches
+        } catch (e) {} 
       }
     }
 
@@ -92,7 +95,7 @@ class _GroupPageState extends State<GroupPage> {
                   crossAxisCount: 2,
                   dragStartBehavior: DragStartBehavior.down,
                   children: [
-                    ...widget.data.exercises.map((exercise) => ExerciseCard(data: exercise, hoistRefresh: updateExercise)),
+                    ...widget.data.exercises.indexed.map((e) => ExerciseCard(index: e.$1, data: e.$2, hoistRefresh: updateExercise)),
                     AddCard(groupData: widget.data, hoistRefresh: updateExercise)
                   ],
                 ),

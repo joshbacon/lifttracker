@@ -5,7 +5,7 @@ class GroupList {
 
   GroupList();
 
-  final List<GroupData> _list = [
+  List<GroupData> _list = [
     GroupData(0, 'Chest', []),
     GroupData(1, 'Shoulders', []),
     GroupData(2, 'Back', []),
@@ -14,9 +14,7 @@ class GroupList {
     GroupData(5, 'Legs', []),
   ];
 
-  void loadData() async {
-    // ignore: invalid_use_of_visible_for_testing_member
-    SharedPreferences.setMockInitialValues({});
+  Future<dynamic>? loadData() async {
     try {
       List<GroupData> tempList = [];
       final prefs = await SharedPreferences.getInstance();
@@ -32,8 +30,11 @@ class GroupList {
           tempList.add(_list[group.id]);
         }
       }
-    // ignore: empty_catches
-    } catch (e) {} // there is nothing in shared preferences to read
+      _list = tempList;
+      return tempList;
+    } catch (e) {
+      return null; // there is nothing in shared preferences to read
+    }
   }
 
   List<GroupData> getList() => _list;

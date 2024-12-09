@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    widget.groupList.loadData();
+    // widget.groupList.loadData();
   }
 
   @override
@@ -69,14 +69,23 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Spacer(flex: 1),
-              Expanded(
-                flex: 4,
-                child: GridView.count(
-                  padding: const EdgeInsets.all(12.0),
-                  crossAxisCount: 2,
-                  dragStartBehavior: DragStartBehavior.down,
-                  children: widget.groupList.getList().map((group) => GroupCard(data: group)).toList(),
-                ),
+              FutureBuilder(
+                future: widget.groupList.loadData(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Spacer(flex: 1);
+                  } else {
+                    return Expanded(
+                      flex: 4,
+                      child: GridView.count(
+                        padding: const EdgeInsets.all(12.0),
+                        crossAxisCount: 2,
+                        dragStartBehavior: DragStartBehavior.down,
+                        children: widget.groupList.getList().map((group) => GroupCard(data: group)).toList(),
+                      ),
+                    );
+                  }
+                }
               ),
             ],
           ),
