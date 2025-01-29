@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:lifttracker/models/grouplist.dart';
-import 'package:lifttracker/pages/home.dart';
+import 'package:lifttracker/pages/controller.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
-
-  final GroupList list = GroupList();
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomePage(groupList: list),
+      home: const ControllerPage(),
       theme: ThemeData(
         colorScheme: const ColorScheme(
           brightness: Brightness.dark,

@@ -18,6 +18,14 @@ class ExerciseData {
     _reps = 0;
   }
 
+  ExerciseData.fromString(String json) {
+    dynamic data = jsonDecode(json);
+    _group = data["_group"];
+    _title = data["_title"];
+    _weight = data["_weight"];
+    _reps = data["_reps"];
+  }
+
   late int _group;
   late String _title;
   late double _weight;
