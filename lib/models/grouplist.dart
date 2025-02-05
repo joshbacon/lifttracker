@@ -14,7 +14,7 @@ class GroupList {
     GroupData(5, 'Legs', []),
   ];
 
-  Future<dynamic>? loadData() async {
+  Future<dynamic> loadData() async {
     try {
       List<GroupData> tempList = [];
       final prefs = await SharedPreferences.getInstance();
@@ -26,14 +26,14 @@ class GroupList {
           } else {
             tempList.add(_list[group.id]);
           }
-        } catch (e) {
+        } catch (_) {
           tempList.add(_list[group.id]);
         }
       }
       _list = tempList;
       return tempList;
-    } catch (e) {
-      return null; // there is nothing in shared preferences to read
+    } catch (_) {
+      return []; // there is nothing in shared preferences to read
     }
   }
 

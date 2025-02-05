@@ -1,11 +1,11 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lifttracker/models/exerciselist.dart';
-import 'package:lifttracker/models/grouplist.dart';
-import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+import 'package:flutter/material.dart';
 import 'package:lifttracker/pages/pr.dart';
 import 'package:lifttracker/pages/workout.dart';
+import 'package:lifttracker/models/grouplist.dart';
+import 'package:lifttracker/models/exerciselist.dart';
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 
 class ControllerPage extends StatefulWidget {
   const ControllerPage({super.key});
@@ -16,21 +16,39 @@ class ControllerPage extends StatefulWidget {
 
 class _ControllerPageState extends State<ControllerPage> {
 
-  final GroupList list = GroupList();
-  final ExerciseList _exercises = ExerciseList();
+  bool doneLoading = false;
+
+  final GroupList groups = GroupList();
+  final ExerciseList exercises = ExerciseList();
+  final ExerciseList tempList = ExerciseList();
 
   final _pageController = PageController(initialPage: 0);
   final NotchBottomBarController _controller = NotchBottomBarController(index: 0);
 
+  loadData() async {
+    Future.wait([groups.loadData(), exercises.loadData(), tempList.loadData()])
+      .then((newValues) =>setState(() {
+        doneLoading = true;
+      })).catchError((_) {});
+  }
+
   @override
   void initState() {
+    loadData();
     super.initState();
-    list.loadData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return !doneLoading ? Scaffold(
+      body: Center(
+        child: Image.asset(
+          'assets/loading.gif',
+          width: 325.0,
+          height: 325.0,
+        ),
+      )
+    ) : Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -71,12 +89,15 @@ class _ControllerPageState extends State<ControllerPage> {
               ),
             )
           ),
+          Container(
+            color: Theme.of(context).colorScheme.surface.withAlpha(150),
+          ),
           PageView(
             controller: _pageController,
             physics: const NeverScrollableScrollPhysics(),
             children: List.generate(2, (index) => [
-              WorkoutPage(groupList: list, exerciseList: _exercises),
-              PRPage(groupList: list),
+              WorkoutPage(groupList: groups, exerciseList: exercises, tempList: tempList),
+              PRPage(groupList: groups),
             ][index]),
           ),
         ]

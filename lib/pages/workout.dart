@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:lifttracker/models/exercisedata.dart';
 import 'package:lifttracker/models/exerciselist.dart';
 import 'package:lifttracker/models/grouplist.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class WorkoutPage extends StatefulWidget {
-  const WorkoutPage({super.key, required this.groupList, required this.exerciseList});
+  const WorkoutPage({super.key, required this.groupList, required this.exerciseList, required this.tempList});
 
   final GroupList groupList;
   final ExerciseList exerciseList;
+  final ExerciseList tempList;
 
   @override
   State<WorkoutPage> createState() => _WorkoutPageState();
@@ -17,22 +19,40 @@ class WorkoutPage extends StatefulWidget {
 
 class _WorkoutPageState extends State<WorkoutPage> {
 
+  void saveLocal() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString("workout", widget.exerciseList.toString());
+    // ignore: empty_catches
+    } catch (_) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Card> cards = <Card>[
       for (int index = 0; index < widget.exerciseList.getList().length; index += 1)
         Card(
           key: Key('$index'),
-          color: Theme.of(context).colorScheme.surfaceDim,
+          color: widget.exerciseList.getList()[index].done ? Theme.of(context).colorScheme.primary.withAlpha(69) : Theme.of(context).colorScheme.surfaceDim,
           shadowColor: Theme.of(context).colorScheme.primary,
-          elevation: 3,
+          elevation: widget.exerciseList.getList()[index].done ? 0 : 3,
           child: SizedBox(
             height: 80,
-            child: Center(
-              child: Text(
-                widget.exerciseList.getList()[index].title,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
+            child: Row(
+              children: [
+                Checkbox(
+                  value: widget.exerciseList.getList()[index].done,
+                  onChanged: (newValue) {
+                    widget.exerciseList.getExercise(index).updateDone(newValue ?? false);
+                    setState(() {});
+                    saveLocal();
+                  }
+                ),
+                Text(
+                  widget.exerciseList.getList()[index].title,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ],
             ),
           ),
         ),
@@ -101,6 +121,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                       setState(() {
                                         widget.exerciseList.clear();
                                       });
+                                      saveLocal();
                                       Navigator.pop(context);
                                     },
                                     child: const Text("Confirm"),
@@ -140,23 +161,23 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                   return GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        if (widget.exerciseList.contains(exercise)) {
-                                          widget.exerciseList.remove(exercise);
+                                        if (widget.tempList.contains(exercise)) {
+                                          widget.tempList.remove(exercise);
                                         } else {
-                                          widget.exerciseList.add(exercise);
+                                          widget.tempList.add(exercise);
                                         }
                                       });
                                     },
                                     child: Row(
                                       children: [
                                         Checkbox(
-                                          value: widget.exerciseList.contains(exercise),
+                                          value: widget.tempList.contains(exercise),
                                           onChanged: (newValue) {
                                             setState(() {
-                                              if (widget.exerciseList.contains(exercise)) {
-                                                widget.exerciseList.remove(exercise);
+                                              if (widget.tempList.contains(exercise)) {
+                                                widget.tempList.remove(exercise);
                                               } else {
-                                                widget.exerciseList.add(exercise);
+                                                widget.tempList.add(exercise);
                                               }
                                             });
                                           }
@@ -179,11 +200,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                 onPressed: () {
                                   Navigator.pop(context, {'wasChanged': false, 'newList': []});
                                 }, 
-                                child: const Text("Cancel")
+                                child: const Text("Cancel"),
                               ),
                               ElevatedButton(
                                 onPressed: () {
-                                  Navigator.pop(context, {'wasChanged': true, 'newList': widget.exerciseList});
+                                  Navigator.pop(context, {'wasChanged': true, 'newList': widget.tempList});
                                 },
                                 child: const Text("Confirm"),
                               ),
@@ -193,10 +214,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       ),
                     ),
                   ),
-                ).then((value) {
-                  if (value['wasChanged']) {
+                ).then((value) async {
+                  if (value != null && value['wasChanged']) {
                     setState(() {
+                      widget.exerciseList.set(widget.tempList.getList());
                     });
+                    saveLocal();
                   }
                 });
               },
@@ -228,6 +251,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
           final ExerciseData item = widget.exerciseList.removeAt(oldIndex);
           widget.exerciseList.insert(newIndex, item);
         });
+        saveLocal();
       },
       children: cards,
     );

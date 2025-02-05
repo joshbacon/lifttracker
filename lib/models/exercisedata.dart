@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 class ExerciseData {
@@ -18,23 +16,25 @@ class ExerciseData {
     _reps = 0;
   }
 
-  ExerciseData.fromString(String json) {
-    dynamic data = jsonDecode(json);
-    _group = data["_group"];
-    _title = data["_title"];
-    _weight = data["_weight"];
-    _reps = data["_reps"];
+  ExerciseData.fromMap(Map<String, dynamic> data) {
+    _group = data["group"];
+    _title = data["title"];
+    _weight = data["weight"];
+    _reps = data["reps"];
+    _done = data["done"];
   }
 
   late int _group;
   late String _title;
   late double _weight;
   late int _reps;
+  bool _done = false;
 
   int get group => _group;
   String get title => _title;
   double get weight => _weight;
   int get reps => _reps;
+  bool get done => _done;
 
   void updateTitle(String newTitle) {
     _title = newTitle;
@@ -48,9 +48,13 @@ class ExerciseData {
     _reps = newReps;
   }
 
+  void updateDone(bool newValue) {
+    _done = newValue;
+  }
+
   @override
   String toString() {
-    return jsonEncode({"group": _group, "title": _title, "weight": _weight, "reps": _reps});
+    return jsonEncode({"group": _group, "title": _title, "weight": _weight, "reps": _reps, "done": _done});
   }
 
 }

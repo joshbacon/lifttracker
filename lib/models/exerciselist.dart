@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:lifttracker/models/exercisedata.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,29 +8,33 @@ class ExerciseList {
 
   List<ExerciseData> _exercises = [];
 
-  Future<dynamic>? loadData() async {
+  Future<dynamic> loadData() async {
     try {
       List<ExerciseData> tempList = [];
       final prefs = await SharedPreferences.getInstance();
-      for (ExerciseData exercise in _exercises) {
-        try {
-          String? data = prefs.getString('${exercise.group.toString()};${exercise.title}');
-          if (data != null) {
-            tempList.add(ExerciseData.fromString(data));
-          }
-        // ignore: empty_catches
-        } catch (e) {}
-      }
+      try {
+        String? workout = prefs.getString("workout");
+        if (workout != null) {
+          List<dynamic> data = jsonDecode(workout);
+          tempList = data.map((e) => ExerciseData.fromMap(e)).toList();
+        }
+      // ignore: empty_catches
+      } catch (_) {}
       _exercises = tempList;
       return tempList;
-    } catch (e) {
-      return null; // there is nothing in shared preferences to read
+    } catch (_) {
+      return []; // there is nothing in shared preferences to read
     }
   }
 
   List<ExerciseData> getList() => _exercises;
 
   ExerciseData getExercise(int index) => _exercises[index];
+
+  @override
+  String toString() {
+    return "[${_exercises.map((e) => e.toString()).join(",")}]";
+  }
 
   bool contains(exercise) {
     return _exercises.contains(exercise);
@@ -40,10 +45,12 @@ class ExerciseList {
   }
 
   void remove(ExerciseData removing) {
+    _exercises[_exercises.indexOf(removing)].updateDone(false);
     _exercises.removeWhere((item) => item.group == removing.group && item.title == removing.title);
   }
 
   ExerciseData removeAt(index) {
+    _exercises[index].updateDone(false);
     return _exercises.removeAt(index);
   }
 
@@ -52,6 +59,9 @@ class ExerciseList {
   }
 
   void clear() {
+    for (int index = 0; index < _exercises.length; index++){
+      _exercises[index].updateDone(false);
+    }
     _exercises = [];
   }
 
