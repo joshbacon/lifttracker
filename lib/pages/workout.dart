@@ -120,6 +120,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                     onPressed: () {
                                       setState(() {
                                         widget.exerciseList.clear();
+                                        widget.tempList.clear();
                                       });
                                       saveLocal();
                                       Navigator.pop(context);
